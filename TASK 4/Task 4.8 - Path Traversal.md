@@ -92,6 +92,16 @@ Khi lập trình viên cố gắng tự xây dựng bộ lọc bằng các hàm 
 * **Kỹ thuật bypass**: Bỏ qua hoàn toàn việc lùi thư mục và chỉ định trực tiếp đường dẫn tuyệt đối bắt đầu bằng gốc thư mục gốc (nếu ứng dụng không tự động chèn thư mục gốc tĩnh vào đầu).
   * Ví dụ: `/etc/passwd` thay vì `../../../../etc/passwd`.
 
+### 3.4. Giữ nguyên thư mục bắt đầu bắt buộc (Start of path validation)
+* **Bộ lọc yếu**: Ứng dụng kiểm tra xem đường dẫn tệp tin do người dùng nhập vào có bắt đầu bằng một thư mục tĩnh chỉ định trước hay không (ví dụ: yêu cầu phải bắt đầu bằng `/var/www/images/`).
+* **Kỹ thuật bypass**: Kẻ tấn công cung cấp thư mục bắt đầu bắt buộc đó để thỏa mãn điều kiện kiểm tra của bộ lọc, sau đó sử dụng chuỗi `../` ngay phía sau để lùi ngược về gốc hệ thống và truy cập file nhạy cảm.
+  * Ví dụ: `/var/www/images/../../../etc/passwd`
+
+### 3.5. Kiểm tra đuôi file bằng Null Byte (Validation of file extension via Null Byte)
+* **Bộ lọc yếu**: Ứng dụng kiểm tra nghiêm ngặt phần mở rộng của tệp tin ở cuối đường dẫn (ví dụ: chỉ cho phép đường dẫn kết thúc bằng `.jpg` hoặc `.png`).
+* **Kỹ thuật bypass**: Kẻ tấn công sử dụng ký tự Null Byte `%00` (ở định dạng URL) để chèn vào trước phần mở rộng bắt buộc. Kỹ thuật này chủ yếu hoạt động trên các ngôn ngữ/phiên bản cũ (như PHP < 5.3.4) sử dụng các API hệ thống viết bằng C. Hàm kiểm tra của ứng dụng web vẫn nhìn thấy đuôi `.jpg` hợp lệ ở cuối chuỗi, nhưng khi hệ điều hành xử lý đường dẫn ở tầng dưới (C-style string), nó sẽ coi chuỗi kết thúc tại vị trí Null Byte và bỏ qua hoàn toàn phần mở rộng giả phía sau.
+  * Ví dụ: `../../../etc/passwd%00.jpg`
+
 ---
 
 ## 4. Giải pháp phòng chống Path Traversal triệt để

@@ -217,33 +217,33 @@ require 'config.php';
 ## Các hàm xử lý tệp, chuỗi và ảnh thông dụng
 
 ### Các hàm xử lý chuỗi (String Functions)
-*   **[substr()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L393)**: Trích xuất một phần của chuỗi dựa vào vị trí bắt đầu và độ dài. Hàm này thường được dùng để lấy đuôi mở rộng của tệp tin tải lên.
-*   **[strrpos()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L393)**: Tìm vị trí xuất hiện cuối cùng của một ký tự trong chuỗi (ví dụ tìm dấu chấm cuối cùng của tên tệp để xác định vị trí phần mở rộng).
-*   **[strtolower()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L397)**: Chuyển đổi toàn bộ chuỗi ký tự thành chữ thường. Giúp đồng bộ hóa phần mở rộng trước khi kiểm tra (tránh việc bypass bằng cách viết hoa như `.pHp` hay `.PnG`).
-*   **[trim()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L228)**: Loại bỏ các khoảng trắng và ký tự đặc biệt ở đầu và cuối chuỗi.
-*   **[bin2hex()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L451)**: Chuyển đổi dữ liệu nhị phân sang dạng chuỗi thập lục phân (hexadecimal string). Thường dùng để sinh chuỗi ngẫu nhiên không chứa ký tự đặc biệt.
-*   **[random_bytes()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L451)**: Tạo ra các byte nhị phân ngẫu nhiên an toàn về mặt mật mã để sinh tên tệp mới.
+*   **substr()**: Trích xuất một phần của chuỗi dựa vào vị trí bắt đầu và độ dài. Hàm này thường được dùng để lấy đuôi mở rộng của tệp tin tải lên.
+*   **strrpos()**: Tìm vị trí xuất hiện cuối cùng của một ký tự trong chuỗi (ví dụ tìm dấu chấm cuối cùng của tên tệp để xác định vị trí phần mở rộng).
+*   **strtolower()**: Chuyển đổi toàn bộ chuỗi ký tự thành chữ thường. Giúp đồng bộ hóa phần mở rộng trước khi kiểm tra (tránh việc bypass bằng cách viết hoa như `.pHp` hay `.PnG`).
+*   **trim()**: Loại bỏ các khoảng trắng và ký tự đặc biệt ở đầu và cuối chuỗi.
+*   **bin2hex()**: Chuyển đổi dữ liệu nhị phân sang dạng chuỗi thập lục phân (hexadecimal string). Thường dùng để sinh chuỗi ngẫu nhiên không chứa ký tự đặc biệt.
+*   **random_bytes()**: Tạo ra các byte nhị phân ngẫu nhiên an toàn về mặt mật mã để sinh tên tệp mới.
 
 ### Các hàm xử lý tệp tin và đường dẫn (File & Path Functions)
-*   **[basename()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L390)**: Lấy ra tên tệp tin từ một đường dẫn đầy đủ (ví dụ `/var/www/uploads/shell.php` $\rightarrow$ `shell.php`). Giúp loại bỏ lỗi Path Traversal khi kẻ tấn công chèn `../`.
-*   **[move_uploaded_file()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L401)**: Di chuyển tệp tin tải lên từ thư mục tạm thời của hệ thống sang thư mục lưu trữ chính thức. Hàm này tự động kiểm tra xem tệp tin có thực sự được tải lên từ client hay không để đảm bảo an toàn.
-*   **[is_uploaded_file()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L273)**: Kiểm tra xem một tệp tin có thực sự được tải lên bằng giao thức HTTP POST hay không. Hàm này giúp chặn lỗi giả mạo đường dẫn tệp cục bộ trên máy chủ.
-*   **[pathinfo()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L273)**: Phân tích đường dẫn tệp tin và trả về thông tin chi tiết (như thư mục, tên tệp tin, phần mở rộng). Đây là giải pháp an toàn hơn so với việc cắt chuỗi thủ công để lấy phần mở rộng tệp.
-*   **[file_get_contents()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L267)**: Đọc toàn bộ nội dung của một tệp tin thành một chuỗi văn bản. Hàm này có nguy cơ gây lỗi Local/Remote File Inclusion (LFI/RFI) nếu kẻ tấn công kiểm soát được tham số đường dẫn tệp tin.
-*   **[file_put_contents()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L286)**: Ghi một chuỗi dữ liệu vào tệp tin. Nếu tên tệp tin và nội dung tệp tin do người dùng kiểm soát, nó sẽ cho phép kẻ tấn công ghi đè hoặc tạo các tệp kịch bản động nguy hiểm trên máy chủ.
-*   **[rename()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L475)**: Đổi tên hoặc di chuyển tệp tin. Khác với `move_uploaded_file`, hàm này hoạt động trên bất kỳ tệp tin nào trong hệ thống.
-*   **[unlink()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L486)**: Xóa một tệp tin vật lý khỏi đĩa cứng. Thường dùng để dọn dẹp các tệp tạm thời hoặc tệp bị kiểm tra lỗi.
-*   **[file_exists()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L485)**: Kiểm tra xem một tệp tin hoặc thư mục có tồn tại trên máy chủ hay không.
-*   **[getcwd()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L475)**: Trả về đường dẫn của thư mục làm việc hiện tại của ứng dụng.
-*   **[chmod()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L273)**: Thay đổi quyền hạn (phân quyền đọc/ghi/thực thi) của một tệp tin hoặc thư mục trên hệ điều hành của máy chủ.
-*   **[ini_get()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L454)**: Đọc giá trị cấu hình hệ thống từ tệp tin `php.ini` (ví dụ lấy thư mục tạm thời `upload_tmp_dir`).
-*   **[sys_get_temp_dir()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L454)**: Trả về đường dẫn thư mục tạm mặc định của hệ điều hành.
+*   **basename()**: Lấy ra tên tệp tin từ một đường dẫn đầy đủ (ví dụ `/var/www/uploads/shell.php` $\rightarrow$ `shell.php`). Giúp loại bỏ lỗi Path Traversal khi kẻ tấn công chèn `../`.
+*   **move_uploaded_file()**: Di chuyển tệp tin tải lên từ thư mục tạm thời của hệ thống sang thư mục lưu trữ chính thức. Hàm này tự động kiểm tra xem tệp tin có thực sự được tải lên từ client hay không để đảm bảo an toàn.
+*   **is_uploaded_file()**: Kiểm tra xem một tệp tin có thực sự được tải lên bằng giao thức HTTP POST hay không. Hàm này giúp chặn lỗi giả mạo đường dẫn tệp cục bộ trên máy chủ.
+*   **pathinfo()**: Phân tích đường dẫn tệp tin và trả về thông tin chi tiết (như thư mục, tên tệp tin, phần mở rộng). Đây là giải pháp an toàn hơn so với việc cắt chuỗi thủ công để lấy phần mở rộng tệp.
+*   **file_get_contents()**: Đọc toàn bộ nội dung của một tệp tin thành một chuỗi văn bản. Hàm này có nguy cơ gây lỗi Local/Remote File Inclusion (LFI/RFI) nếu kẻ tấn công kiểm soát được tham số đường dẫn tệp tin.
+*   **file_put_contents()**: Ghi một chuỗi dữ liệu vào tệp tin. Nếu tên tệp tin và nội dung tệp tin do người dùng kiểm soát, nó sẽ cho phép kẻ tấn công ghi đè hoặc tạo các tệp kịch bản động nguy hiểm trên máy chủ.
+*   **rename()**: Đổi tên hoặc di chuyển tệp tin. Khác với `move_uploaded_file`, hàm này hoạt động trên bất kỳ tệp tin nào trong hệ thống.
+*   **unlink()**: Xóa một tệp tin vật lý khỏi đĩa cứng. Thường dùng để dọn dẹp các tệp tạm thời hoặc tệp bị kiểm tra lỗi.
+*   **file_exists()**: Kiểm tra xem một tệp tin hoặc thư mục có tồn tại trên máy chủ hay không.
+*   **getcwd()**: Trả về đường dẫn của thư mục làm việc hiện tại của ứng dụng.
+*   **chmod()**: Thay đổi quyền hạn (phân quyền đọc/ghi/thực thi) của một tệp tin hoặc thư mục trên hệ điều hành của máy chủ.
+*   **ini_get()**: Đọc giá trị cấu hình hệ thống từ tệp tin `php.ini` (ví dụ lấy thư mục tạm thời `upload_tmp_dir`).
+*   **sys_get_temp_dir()**: Trả về đường dẫn thư mục tạm mặc định của hệ điều hành.
 
 ### Các hàm kiểm tra và xử lý hình ảnh (Image Functions)
-*   **[getimagesize()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.2%20-%20PHP%20Core.md#L399)**: Lấy kích thước và định dạng thực tế của ảnh. Nếu tệp tin truyền vào không phải là ảnh hợp lệ, hàm sẽ trả về giá trị `false`. Attacker có thể chèn mã PHP vào phần comment của ảnh (Polyglot) để vượt qua hàm này.
-*   **[imagecreatefromjpeg()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L465)** / **[imagecreatefrompng()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L469)**: Khởi tạo một đối tượng hình ảnh mới từ tệp tin ảnh JPEG hoặc PNG có sẵn. Cơ chế này vẽ lại ảnh, giúp loại bỏ toàn bộ dữ liệu phụ (metadata) chứa mã độc.
-*   **[imagejpeg()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L466)** / **[imagepng()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L470)**: Xuất dữ liệu hình ảnh từ đối tượng ảnh ra tệp tin vật lý hoặc màn hình.
-*   **[imagedestroy()](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.3%20-%20DVWA%20File%20Upload.md#L472)**: Giải phóng bộ nhớ RAM hệ thống sau khi xử lý xong đối tượng hình ảnh.
+*   **getimagesize()**: Lấy kích thước và định dạng thực tế của ảnh. Nếu tệp tin truyền vào không phải là ảnh hợp lệ, hàm sẽ trả về giá trị `false`. Attacker có thể chèn mã PHP vào phần comment của ảnh (Polyglot) để vượt qua hàm này.
+*   **imagecreatefromjpeg() / **imagecreatefrompng()**: Khởi tạo một đối tượng hình ảnh mới từ tệp tin ảnh JPEG hoặc PNG có sẵn. Cơ chế này vẽ lại ảnh, giúp loại bỏ toàn bộ dữ liệu phụ (metadata) chứa mã độc.
+*   **imagejpeg()** / **imagepng()**: Xuất dữ liệu hình ảnh từ đối tượng ảnh ra tệp tin vật lý hoặc màn hình.
+*   **imagedestroy()**: Giải phóng bộ nhớ RAM hệ thống sau khi xử lý xong đối tượng hình ảnh.
 
 ---
 
