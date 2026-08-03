@@ -448,3 +448,37 @@ Bằng cách mã hóa URL hai lần:
 4. Sau khi vượt qua bộ lọc, ứng dụng web sử dụng thư viện HTTP nội bộ để thực hiện gửi yêu cầu tiếp theo đến backend API. Thư viện này tiến hành giải mã URL lần thứ hai để thiết lập đường dẫn gửi đi chính xác, khôi phục lại ký tự `%61` thành chữ `a`, chuyển đổi thành công đường dẫn truy cập thành `/admin`.
 
 Kỹ thuật mã hóa URL hai lần lợi dụng sự không đồng nhất về số lần giải mã URL giữa chốt chặn kiểm tra an ninh (chỉ giải mã một lần) và thành phần thực thi yêu cầu HTTP backend (giải mã thêm một lần trước khi gửi hoặc nhận dữ liệu thực tế).
+
+## Bài tập 4: SSRF với kỹ thuật bypass bộ lọc thông qua lỗ hổng Open Redirect
+
+### Yêu cầu bài tập
+
+Thay đổi URL kiểm tra hàng tồn kho để truy cập vào giao diện quản trị tại `http://192.168.0.12:8080/admin` và thực hiện hành động xóa người dùng `carlos`.
+
+### Phân tích lỗ hổng
+
+Chức năng kiểm tra tồn kho giới hạn chỉ cho phép truy cập các URL nội bộ thuộc ứng dụng hiện tại (allowlist). Khi gửi trực tiếp địa chỉ IP đích khác, yêu cầu sẽ bị chặn.
+
+Để vượt qua, cần kết hợp lỗ hổng Open Redirect với SSRF:
+
+* Tìm một endpoint có chức năng chuyển hướng (ví dụ `/redirect?url=...`).
+* Truyền đường dẫn của endpoint chuyển hướng này (URL hợp lệ của ứng dụng) vào tham số stockApi kèm theo địa chỉ IP đích làm tham số chuyển hướng.
+* Máy chủ ứng dụng kiểm tra thấy URL hợp lệ nên gửi yêu cầu đi, sau đó tự động chuyển hướng theo lệnh HTTP 302 Found tới máy chủ quản trị nội bộ.
+
+Cơ chế bypass:
+
+```text
+[POST stockApi=URL nội bộ của ứng dụng]
+                  │
+                  ▼
+   [Bộ lọc Allowlist kiểm tra] ──(Hợp lệ)──> [Gửi GET tới ứng dụng]
+                                                    │
+                                             (Gặp Open Redirect)
+                                                    │
+                                                    ▼
+                                     [Tự động chuyển hướng GET tới đích]
+```
+
+### Quy trình thực hiện
+
+### Phân tích cơ chế hoạt động của payload
