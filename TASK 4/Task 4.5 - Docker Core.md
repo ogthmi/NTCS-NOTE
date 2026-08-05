@@ -46,8 +46,6 @@ Docker Core & Compose
     └── Lỗ hổng gắn kết Docker Socket (/var/run/docker.sock)
 ```
 
----
-
 ## Giới thiệu về Docker Core
 
 ### Tài liệu tham khảo:
@@ -82,8 +80,6 @@ Image là một bản thiết kế chỉ đọc (Read-only template) chứa mã 
 
 Container là một thực thể hoạt động được khởi tạo từ Image, giống như ngôi nhà thật được xây dựng từ bản vẽ hoặc chiếc bánh thật được đúc ra từ khuôn. Mỗi container hoạt động độc lập và chứa thêm một lớp ghi dữ liệu tạm thời (Writable layer) xếp chồng lên trên các lớp chỉ đọc của Image để lưu trữ dữ liệu phát sinh khi chạy.
 
----
-
 ## Kiến trúc Docker và Các cơ chế lõi
 
 ### Tài liệu tham khảo:
@@ -110,8 +106,6 @@ Nhân hệ điều hành Linux sử dụng công nghệ Namespaces để tạo r
 ### Linux Control Groups - cgroups (Giới hạn tài nguyên)
 Trong khi Namespaces thực hiện nhiệm vụ cô lập môi trường xung quanh, thì Control Groups (cgroups) chịu trách nhiệm giới hạn hạn mức tài nguyên phần cứng.
 Cgroups hoạt động giống như một thiết bị giới hạn lượng điện nước tiêu thụ, ngăn chặn tình trạng một container bị lỗi chiếm dụng toàn bộ tài nguyên CPU, dung lượng RAM hoặc băng thông ổ đĩa (I/O) của máy chủ.
-
----
 
 ## Dockerfile (Xây dựng hình ảnh container)
 
@@ -171,8 +165,6 @@ RUN chown -R www-data:www-data /var/www/html
 EXPOSE 80
 ```
 
----
-
 ## Docker Volumes (Lưu trữ dữ liệu)
 
 ### Tài liệu tham khảo:
@@ -209,11 +201,9 @@ Sơ đồ vị trí lưu trữ dữ liệu của Volumes và Bind Mounts trên m
       │   │           Thư mục trên Máy chủ       │   │
       │   │            (D:/my_project/src)       │   │
       │   │            (Cơ chế Bind Mount)       │   │
-      │   └──────────────────────────────────────┘   │
+      │   └──────────────────────────────────────┘
       └──────────────────────────────────────────────┘
 ```
-
----
 
 ## Mạng trong Docker (Docker Networking)
 
@@ -231,8 +221,6 @@ Docker cung cấp các trình điều khiển mạng (Network Drivers) tích h�
 ### Cơ chế Port Mapping (Ánh xạ cổng)
 Mặc dù container hoạt động độc lập trên mạng Bridge nội bộ, người dùng từ máy tính bên ngoài không thể truy cập trực tiếp các cổng nội bộ này.
 Cơ chế ánh xạ cổng (Port Mapping) sử dụng tùy chọn `-p <host_port>:<container_port>` để mở đường dẫn truyền dữ liệu từ cổng máy chủ vật lý vào cổng tương ứng của container.
-
----
 
 ## Docker Compose (Quản lý đa container)
 
@@ -282,8 +270,6 @@ networks:
     driver: bridge
 ```
 
----
-
 ## Các lệnh Docker thường dùng (Docker CLI Commands)
 
 ### Tài liệu tham khảo:
@@ -325,8 +311,6 @@ Việc sử dụng thành thạo các câu lệnh CLI giúp quản lý container
 * **`docker-compose down`**: Dừng và xóa sạch các container, mạng nội bộ và tài nguyên được tạo ra bởi lệnh `up`.
 * **`docker-compose ps`**: Kiểm tra trạng thái hoạt động của các container thuộc dự án hiện tại.
 * **`docker-compose logs`**: Xem nhật ký hoạt động tổng hợp của tất cả các container trong cấu hình.
-
----
 
 ## Lưu ý bảo mật Docker (Docker Security)
 

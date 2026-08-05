@@ -91,8 +91,6 @@ Trong kiến trúc hệ thống thực tế, các thành phần của ứng dụ
 
 Các máy chủ trong mạng nội bộ giao tiếp với nhau bằng các địa chỉ IP private thông qua các bộ chuyển mạch nội bộ hoặc mạng ảo. Vì các kết nối này diễn ra bên trong phân vùng mạng an toàn, các kỹ sư hệ thống thường có xu hướng cấu hình các dịch vụ nội bộ đơn giản hơn, giảm bớt các bước xác thực danh tính hoặc cấp quyền phức tạp để tối ưu hiệu năng. Đây chính là yếu tố làm tăng tính nghiêm trọng của lỗ hổng khi kẻ tấn công có thể thông qua máy chủ web để gửi yêu cầu trực tiếp tới các dịch vụ này.
 
----
-
 ## 2. Lỗ hổng SSRF
 
 ### Khái niệm
@@ -125,8 +123,6 @@ Lỗ hổng này có thể gây ra nhiều hậu quả nghiêm trọng:
 * Truy cập các API cấu hình hệ thống của nhà cung cấp dịch vụ đám mây (Cloud Metadata).
 * Thực thi mã lệnh từ xa bằng cách tương tác với các giao thức hoặc dịch vụ nội bộ có lỗ hổng.
 
----
-
 ## 3. Các loại lỗ hổng SSRF
 
 Ứng dụng web xử lý kết quả trả về từ yêu cầu HTTP của máy chủ theo hai cách khác nhau, tương ứng với hai loại lỗ hổng:
@@ -138,8 +134,6 @@ Xảy ra khi ứng dụng web nhận kết quả trả về từ yêu cầu HTTP
 ### Blind SSRF (Không trả về kết quả trực tiếp)
 
 Xảy ra khi ứng dụng gửi yêu cầu HTTP đi nhưng không trả lại nội dung phản hồi cho người dùng, hoặc chỉ trả về thông tin trạng thái chung như thành công hoặc thất bại. Kẻ tấn công không thể đọc trực tiếp dữ liệu từ máy chủ mục tiêu mà phải phát hiện dựa trên các dấu hiệu gián tiếp như thời gian phản hồi thay đổi hoặc giám sát các kết nối đi ra ngoài hệ thống qua các công cụ ghi nhận tương tác ngoài băng (Out-of-band).
-
----
 
 ## 4. Các điểm tiếp nhận nguy hiểm (SSRF Sinks)
 
@@ -196,8 +190,6 @@ def preview():
     return r.text
 ```
 
----
-
 ## 5. Các kỹ thuật khai thác cơ bản và Payload mẫu
 
 ### Khai thác hướng tới chính máy chủ (Localhost)
@@ -250,8 +242,6 @@ GET /fetch.php?url=http://169.254.169.254/computeMetadata/v1/instance/service-ac
 Host: target.com
 ```
 
----
-
 ## 6. Biện pháp phòng chống
 
 ### Cơ chế Whitelist (Khuyên dùng)
@@ -269,8 +259,6 @@ Việc cố gắng chặn các địa chỉ IP private như 127.0.0.1, localhost
 ### Cấu hình tường lửa cấp mạng (Network-level Firewall)
 
 Thiết lập các quy tắc tường lửa trên máy chủ hoặc thiết bị mạng để chặn toàn bộ các kết nối đi ra (egress traffic) từ máy chủ web hướng tới các vùng mạng nội bộ nhạy cảm hoặc dải IP dịch vụ đám mây (169.254.169.254), ngoại trừ các cổng dịch vụ bắt buộc phải kết nối.
-
----
 
 ## 7. Case Study
 
@@ -357,8 +345,6 @@ security-groups
 ```
 
 Ứng dụng web đã trả về toàn bộ danh mục dữ liệu cấu hình hệ thống. Lỗ hổng SSRF được xác nhận tồn tại.
-
----
 
 ## 8. Danh sách kiểm tra lỗi (Pentest Checklist)
 

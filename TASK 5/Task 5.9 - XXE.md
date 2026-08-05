@@ -2,13 +2,16 @@
 
 ## Tài liệu tham khảo
 
-* https://portswigger.net/web-security/xxe
-* https://viblo.asia/p/xxe-injection-vulnerabilities-lo-hong-xml-phan-1-vlZL992BLQK
-* https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing
-* https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html
+* [portswigger.net/web-security/xxe](https://portswigger.net/web-security/xxe)
+* [viblo.asia/p/xxe-injection-vulnerabilities-lo-hong-xml-phan-1-vlZL992BLQK](https://viblo.asia/p/xxe-injection-vulnerabilities-lo-hong-xml-phan-1-vlZL992BLQK)
+* [owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing](https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing)
+* [cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)
 * [portswigger.net/web-security/xxe/blind](https://portswigger.net/web-security/xxe/blind)
 
 ## Bố cục nội dung
+
+```text
+XXE XML External Entity
 
 * Kiến thức nền XML
   * XML là gì và Cấu trúc XML chuẩn
@@ -67,8 +70,7 @@
 * Danh sách kiểm tra Pentest Checklist và Cheat Sheet nhanh
   * Các vị trí thường gặp XML
   * Các mẫu Payload thông dụng
-
----
+```
 
 ## Kiến thức nền XML
 
@@ -95,8 +97,6 @@ Ví dụ về cấu trúc XML:
 </bookstore>
 ```
 
----
-
 ### XML Parser là gì và Luồng xử lý XML
 
 XML Parser là thư viện phần mềm thực hiện nhiệm vụ:
@@ -111,8 +111,6 @@ Luồng xử lý dữ liệu:
 2. XML Parser tiến hành phân tích cú pháp.
 3. XML Parser giải quyết các tham chiếu thực thể và nạp tài nguyên nếu có yêu cầu.
 4. Kết quả phân tích được chuyển cho ứng dụng thực hiện nghiệp vụ tiếp theo.
-
----
 
 ### DTD Document Type Definition là gì
 
@@ -137,8 +135,6 @@ Ví dụ về DTD nội bộ:
 </message>
 ```
 
----
-
 ### ENTITY trong XML
 
 Entity hoạt động tương tự như biến số. Giá trị được định nghĩa một lần trong DTD và có thể được gọi lại nhiều lần trong tài liệu XML.
@@ -160,13 +156,11 @@ Entity hoạt động tương tự như biến số. Giá trị được định
 * PUBLIC: Sử dụng định danh công khai được chuẩn hóa kèm đường dẫn dự phòng.
   * Ví dụ: `<!ENTITY dtd PUBLIC 'public_id' 'http://example.com/rule.dtd'>`
 
----
-
 ## Tổng quan về lỗ hổng XXE
 
 ### XXE Injection là gì
 
-XXE Injection là lỗ hổng bảo mật xảy ra khi ứng dụng phân tích cú pháp đầu vào XML chứa tham chiếu thực thể bên ngoài không an toàn. Máy chủ sẽ tự động nạp và xử lý các tài nguyên được chỉ định trong thực thể đó.
+XXE Injection là lỗ hổng bảo mật xảy ra khi ứng dụng phân tích cú pháp đầu vào XML chứa tham chiếu thực thể bên ngoài không an sau. Máy chủ sẽ tự động nạp và xử lý các tài nguyên được chỉ định trong thực thể đó.
 
 ### Nguyên nhân cốt lõi
 
@@ -192,8 +186,6 @@ graph TD
     FilePath --> ReadFile
     ReadFile --> Application
 ```
-
----
 
 ## Phân loại XML Parser và Mức độ an toàn
 
@@ -235,8 +227,6 @@ try {
 }
 ```
 
----
-
 ## Các kỹ thuật khai thác XXE
 
 ### Nhóm Inband XXE hiển thị kết quả trực tiếp
@@ -277,8 +267,6 @@ Ví dụ Payload:
   <productId>&ssrf;</productId>
 </stockCheck>
 ```
-
----
 
 ### Nhóm Blind XXE khai thác mù
 
@@ -337,8 +325,6 @@ Payload gửi đến ứng dụng mục tiêu để kích hoạt tải DTD và g
 <foo>bar</foo>
 ```
 
----
-
 ### Nhóm các vector nâng cao khác
 
 #### XInclude Injection
@@ -358,8 +344,6 @@ Ví dụ Payload:
 * SVG: Định dạng ảnh vector dựa trên XML. Có thể chèn thực thể độc hại vào cấu trúc thẻ để khai thác khi máy chủ xử lý ảnh.
 * DOCX: Định dạng tệp tin Office thực chất là gói nén ZIP chứa các file XML. Sửa đổi cấu trúc tệp XML bên trong để kích hoạt lỗ hổng.
 * SOAP: Giao thức truyền tin dựa trên XML, dễ bị khai thác nếu cấu hình endpoint thiếu an toàn.
-
----
 
 ## Quy trình phát hiện lỗ hổng
 
@@ -394,8 +378,6 @@ Rà soát mã nguồn để xác định các thư viện khởi tạo XML Parse
 * Burp Collaborator giúp ghi nhận các kết nối Out of Band từ máy chủ đích.
 * XXEinjector hỗ trợ tự động hóa quá trình trích xuất dữ liệu qua các giao thức mạng.
 
----
-
 ## Kỹ thuật Bypass qua mặt bộ lọc
 
 Các kỹ thuật bypass lọc từ khóa hoặc kiểm duyệt XXE phổ biến bao gồm:
@@ -405,8 +387,6 @@ Các kỹ thuật bypass lọc từ khóa hoặc kiểm duyệt XXE phổ biến
 * Parameter Entity (Sử dụng các thực thể tham số trong DTD)
 * Local DTD (Lợi dụng các tệp tin DTD có sẵn trên hệ thống)
 * WAF Parser Difference (Sự khác biệt trong việc phân tích cú pháp giữa tường lửa và parser thực tế)
-
----
 
 ## Tác động của lỗ hổng
 
@@ -422,8 +402,6 @@ Thực thi mã từ xa RCE thường chỉ đạt được khi kết hợp thêm
 * Khai thác các Java gadget có sẵn trên hệ thống
 * Kết hợp với lỗ hổng deserialization
 * Sử dụng SSRF để tấn công các dịch vụ nội bộ không có cấu hình bảo mật như Redis
-
----
 
 ## Biện pháp phòng chống
 
@@ -449,8 +427,6 @@ settings.DtdProcessing = DtdProcessing.Prohibit;
 #### Ngôn ngữ Python
 
 Sử dụng thư viện defusedxml thay thế cho các thư viện mặc định của hệ thống.
-
----
 
 ## Case Study thực tế và Lịch sử CVE nổi tiếng
 
@@ -478,8 +454,6 @@ Nhiều cổng dịch vụ SOAP XML của hệ thống SAP NetWeaver từng bị
 
 * CVE 2021 29447: Lỗ hổng WordPress Core XXE cho phép đọc tệp tin wp config thông qua tính năng phân tích dữ liệu tệp tin WAV trong thư viện phương tiện.
 * Facebook Bug Bounty: Lỗ hổng XXE trị giá 33000 USD cho phép đọc file hệ thống thông qua việc sửa đổi cấu trúc XML của tệp tin tài liệu Word DOCX tải lên hệ thống tuyển dụng.
-
----
 
 ## Danh sách kiểm tra Pentest Checklist và Cheat Sheet nhanh
 

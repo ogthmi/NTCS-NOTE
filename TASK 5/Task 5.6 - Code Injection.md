@@ -719,8 +719,6 @@ Nhiều ứng dụng web và framework từng bị khai thác vì dùng dynamic 
 * Xác nhận bằng payload đơn giản trước khi thử RCE.
 * Ghi chép rõ luồng Source → Sink → Runtime → Impact.
 
----
-
 > **Nội dung nâng cao (xem thêm khi đã vững nền):**
 > Các mục sau đây dành cho người đã nắm vững các khái niệm cơ bản:
 >

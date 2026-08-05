@@ -2,8 +2,6 @@
 
 > Bản chất lỗ hổng điều hướng đường dẫn để Đọc file và Ghi/Tải lên file tùy ý ngoài thư mục quy định.
 
----
-
 ## 1. Path Traversal là gì?
 
 **Path Traversal** (hay còn gọi là Directory Traversal) là lỗ hổng bảo mật cho phép kẻ tấn công điều hướng qua các thư mục trên hệ thống tệp tin của máy chủ.
@@ -12,8 +10,6 @@
   * `../` (trên hệ thống Linux/Unix/macOS)
   * `..\` (trên hệ thống Windows)
 * **Nguyên nhân gốc rễ**: Ứng dụng nhận dữ liệu đầu vào từ người dùng (như tên tệp hoặc đường dẫn tệp) và trực tiếp ghép chuỗi (concatenation) vào các hàm xử lý tệp của hệ thống mà không thực hiện kiểm tra, làm sạch hoặc chuẩn hóa đường dẫn.
-
----
 
 ## 2. Phân loại tác động của Path Traversal
 
@@ -40,8 +36,6 @@ Lỗ hổng Path Traversal được chia làm hai hướng tác động chính v
   Hàm `file_get_contents` sẽ xử lý đường dẫn: `/var/www/html/static/../../../../etc/passwd`.
   Do có các chuỗi `../` điều hướng lùi về thư mục cha, đường dẫn thực tế sẽ trỏ thẳng tới `/etc/passwd` và trả nội dung về cho kẻ tấn công.
 
----
-
 ### B. Arbitrary File Write / Upload (Ghi/Tải lên file tùy ý)
 * **Khái niệm**: Lợi dụng chức năng lưu tệp tin (như File Upload hoặc tạo file mới) để lưu tệp độc hại ngoài thư mục chỉ định.
 * **Tầm quan trọng đặc biệt trong File Upload**:
@@ -61,8 +55,6 @@ Lỗ hổng Path Traversal được chia làm hai hướng tác động chính v
   ```
   Hàm `move_uploaded_file` sẽ nối chuỗi thành đường dẫn lưu file: `/var/www/html/uploads/../shell.php`.
   Đường dẫn này được hệ điều hành chuẩn hóa thành `/var/www/html/shell.php`. Webshell đã được ghi đè ra ngoài thư mục `/uploads/` bị cấm và nằm ở Web Root, cho phép kẻ tấn công kích hoạt RCE thành công.
-
----
 
 ## 3. Các kỹ thuật Bypass bộ lọc Path Traversal
 
@@ -101,8 +93,6 @@ Khi lập trình viên cố gắng tự xây dựng bộ lọc bằng các hàm 
 * **Bộ lọc yếu**: Ứng dụng kiểm tra nghiêm ngặt phần mở rộng của tệp tin ở cuối đường dẫn (ví dụ: chỉ cho phép đường dẫn kết thúc bằng `.jpg` hoặc `.png`).
 * **Kỹ thuật bypass**: Kẻ tấn công sử dụng ký tự Null Byte `%00` (ở định dạng URL) để chèn vào trước phần mở rộng bắt buộc. Kỹ thuật này chủ yếu hoạt động trên các ngôn ngữ/phiên bản cũ (như PHP < 5.3.4) sử dụng các API hệ thống viết bằng C. Hàm kiểm tra của ứng dụng web vẫn nhìn thấy đuôi `.jpg` hợp lệ ở cuối chuỗi, nhưng khi hệ điều hành xử lý đường dẫn ở tầng dưới (C-style string), nó sẽ coi chuỗi kết thúc tại vị trí Null Byte và bỏ qua hoàn toàn phần mở rộng giả phía sau.
   * Ví dụ: `../../../etc/passwd%00.jpg`
-
----
 
 ## 4. Giải pháp phòng chống Path Traversal triệt để
 

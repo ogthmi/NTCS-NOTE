@@ -2,16 +2,12 @@
 
 > Tài liệu này tập trung làm rõ bản chất kỹ thuật của các bộ lọc (Filter) bảo mật phía máy chủ và nguyên nhân gốc rễ (Root Cause) giúp kẻ tấn công vượt qua (Bypass) thành công.
 
----
-
 ## 1. Bản chất của Bộ lọc & Bypass
 
 Trong một ứng dụng Web, chức năng tải tệp lên (File Upload) thường tiềm ẩn nguy cơ cao dẫn đến **Thực thi mã từ xa (RCE)** nếu kẻ tấn công tải được tệp mã kịch bản động (như `.php`, `.jsp`, `.aspx`) vào hệ thống và kích hoạt được nó.
 
 * **Filter (Bộ lọc)**: Các chốt chặn do lập trình viên thiết lập nhằm xác minh tính hợp lệ của tệp tải lên.
 * **Bypass (Vượt qua)**: Kẻ tấn công lợi dụng sự **bất đồng bộ (parser confusion)** giữa cách ứng dụng kiểm tra tệp và cách hệ điều hành hoặc máy chủ web xử lý/thực thi tệp sau đó để lưu và chạy webshell thành công.
-
----
 
 ## 2. Chi tiết các cơ chế lọc và Kỹ thuật Bypass tương ứng
 
@@ -72,8 +68,6 @@ Trong một ứng dụng Web, chức năng tải tệp lên (File Upload) thư�
 * **Cách bypass**: Đặt tên tệp là `shell.php::$DATA`.
 * **Điều kiện thành công**: Máy chủ chạy hệ điều hành Windows và sử dụng phân vùng NTFS.
 
----
-
 ### 2.2. Bộ lọc Kiểu nội dung (MIME/Content-Type Filter)
 
 * **Bộ lọc hoạt động thế nào?**: Đọc giá trị tiêu đề `Content-Type` được gửi kèm trong phần body của HTTP POST request.
@@ -88,8 +82,6 @@ Trong một ứng dụng Web, chức năng tải tệp lên (File Upload) thư�
   ```
 * **Cách bypass**: Sử dụng Burp Suite bắt request và đổi giá trị tiêu đề `Content-Type: application/x-php` thành `Content-Type: image/png` hoặc `image/jpeg`.
 * **Điều kiện thành công**: Ứng dụng chỉ sử dụng duy nhất trường dữ liệu `type` của request để xác thực định dạng file.
-
----
 
 ### 2.3. Bộ lọc Chữ ký tệp (Magic Bytes / File Signature Filter)
 
@@ -110,8 +102,6 @@ Trong một ứng dụng Web, chức năng tải tệp lên (File Upload) thư�
   <?php system($_GET['cmd']); ?>
   ```
 * **Điều kiện thành công**: PHP Engine được cấu hình thực thi tệp tin này khi được truy cập.
-
----
 
 ### 2.4. Bộ lọc Nội dung file (File Content Filter / Obfuscation)
 
@@ -149,8 +139,6 @@ Trong một ứng dụng Web, chức năng tải tệp lên (File Upload) thư�
     ```
 * **Bypass**: Hàm `getimagesize()` kiểm tra thấy ảnh vẫn đúng cấu trúc chiều cao/chiều rộng nên cho qua. Tuy nhiên, khi tệp được chạy dưới dạng PHP, PHP Engine vẫn quét thấy và thực thi mã ẩn trong metadata.
 
----
-
 ### 2.5. Bộ lọc Dung lượng tệp (File Size Filter)
 
 * **Bộ lọc hoạt động thế nào?**: Giới hạn kích thước tối đa của tệp tin tải lên.
@@ -165,14 +153,10 @@ Trong một ứng dụng Web, chức năng tải tệp lên (File Upload) thư�
     <?=`$_GET[1]`;
     ```
 
----
-
 ### 2.6. Bộ lọc Tên file & Đường dẫn (File Name & Path Filter)
 
 * **Bản chất điểm yếu (Root Cause)**: Lọc chuỗi không đệ quy hoặc bỏ sót URL Encoding, dẫn đến lỗ hổng Path Traversal (ghi file ngoài thư mục chỉ định).
 * **Bypass & Chi tiết**: Kỹ thuật này có tầm ảnh hưởng lớn, được phân tích chi tiết riêng biệt tại [Task 4.8 - Path Traversal.md](file:///d:/NINHTHANH_CYBERSEC/DOCUMENTATION/TASK%204/Task%204.8%20-%20Path%20Traversal.md).
-
----
 
 ## 3. Quy trình kiểm thử thực chiến (Bypass Workflow)
 
